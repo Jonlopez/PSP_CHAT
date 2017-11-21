@@ -6,9 +6,11 @@
 package chaton.model;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -23,32 +25,40 @@ public class Client {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-         Socket sc;
-        BufferedReader br;
+    public static void main(String[] args) throws IOException {
+        Socket sc = null;
+        BufferedReader br = null;
+        PrintWriter pw = null;
         //Cliente
         try 
         {
             sc = new Socket(HOST, PUERTO); //conectar a un servidor en localhost con puerto 5500
             //creamos el flujo de datos por el que se enviara un mensaje
             br= new BufferedReader(new InputStreamReader(System.in));
-            System.out.println("Introduce texto a enviar al servidor");
+            
+            String nickname = (String) JOptionPane.showInputDialog("Escribe tu nickname para esta sesión: ");
+            System.out.print(nickname + " escribe tu mensaje: ");
             
             String cadenaEnvio = br.readLine();
-            PrintWriter pw =new PrintWriter(sc.getOutputStream(), true);
+            pw =new PrintWriter(sc.getOutputStream(), true);
             while(!cadenaEnvio.equalsIgnoreCase("fin"))
             {
-                pw.println(cadenaEnvio);
-                System.out.println("Introduce texto a enviar al servidor");
+                pw.println(nickname + "_" + cadenaEnvio);
+                System.out.print( nickname +" escribe tu mensaje: ");
                 cadenaEnvio = br.readLine();
             }
             pw.println(cadenaEnvio);
-            //cerramos la conexión
-                br.close();
-                pw.close();
-                sc.close();
+            
         } catch (Exception e) {
-        System.out.println("Error: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
+        }finally{
+            //cerramos la conexión
+            if(br != null)
+                br.close();
+            if(pw != null)
+                pw.close();
+            if(sc != null)
+                sc.close();
         }
     }
     
