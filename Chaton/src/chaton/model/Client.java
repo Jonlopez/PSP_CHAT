@@ -35,15 +35,17 @@ public class Client {
             sc = new Socket(HOST, PUERTO); //conectar a un servidor en localhost con puerto 5500
             //creamos el flujo de datos por el que se enviara un mensaje
             br= new BufferedReader(new InputStreamReader(System.in));
+            pw =new PrintWriter(sc.getOutputStream(), true);
             
             String nickname = (String) JOptionPane.showInputDialog("Escribe tu nickname para esta sesión: ");
+            pw.println(nickname);
             System.out.print(nickname + " escribe tu mensaje: ");
             
             String cadenaEnvio = br.readLine();
-            pw =new PrintWriter(sc.getOutputStream(), true);
+           
             while(!cadenaEnvio.equalsIgnoreCase("fin"))
             {
-                pw.println(nickname + "_" + cadenaEnvio);
+                pw.println(cadenaEnvio);
                 System.out.print( nickname +" escribe tu mensaje: ");
                 cadenaEnvio = br.readLine();
             }

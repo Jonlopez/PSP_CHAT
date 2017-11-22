@@ -8,9 +8,11 @@ package chaton.model;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -19,55 +21,49 @@ import java.util.logging.Logger;
 public class ServerThread extends Thread {
     Socket socket = null;
     String nickname;
+    Syn_online syn_online;
     
-    public ServerThread(Socket socket) throws IOException {
-      this.socket = socket;
-      this.nickname = findNickName();      
-    }
-    
-    private String findNickName() throws IOException{
+    public ServerThread(Socket socket, Syn_online syn_online) throws IOException {
+        this.syn_online = syn_online;
         
-         BufferedReader br = null;
-         String str = "";
-       /* try
-        {
-       // CREO FLUJO DE ENTRADA DEL CLIENTE
-            br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String cadena = br.readLine();
-             
-            str = (String) cadena.split("_")[0]; 
-            //cadena = br.readLine();                    
-            
-        }catch(IOException e){
-            System.out.println(e.getMessage());
-        }finally{           
-            if(br != null)
-                br.close();  
-        }*/
-        
-        return str;
-    }
+        this.socket = socket;     
+    } 
     
      public void run() 
     {
         BufferedReader br = null;
+        PrintWriter pw = null;
+
         try
         {
        // CREO FLUJO DE ENTRADA DEL CLIENTE
+            
             br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+           
             String cadena = br.readLine();
             
-            this.nickname = (String) cadena.split("_")[0];
-            String mensaje = (String) cadena.split("_")[1];
+            if(cadena != null && cadena != "")
+                this.nickname = (String) cadena;                      
             
-            System.out.println("El cliente " + this.nickname + " se ha conectado.");
+            this.syn_online.conectarUsuario(nickname);     
+            
+            System.out.println("USUARIOS CONECTADOS -> " + syn_online.getNum_users());
+            
+            cadena = br.readLine();
             
             while(!cadena.equalsIgnoreCase("fin"))
             {
-            //EL CLIENTE ME ENVIA UN MENSAJE
-                System.out.println("El usuario " + this.nickname + " dice: " + mensaje);
-                cadena = br.readLine();
-            }        
+                if(cadena != ""){
+                    //EL CLIENTE ME ENVIA UN MENSAJE
+                    System.out.println("El usuario " + this.nickname + " dice: " + cadena);                     
+                    cadena = br.readLine();
+                }
+                
+            }      
+            
+            this.syn_online.desconectarUsuario(nickname);        
+            System.out.println("USUARIOS CONECTADOS -> " + syn_online.getNum_users());
+            
             
         }catch(IOException e){
             System.out.println(e.getMessage());

@@ -22,10 +22,12 @@ public class Server {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException, InterruptedException {
-          ServerSocket serverSocket = null;
+        ServerSocket serverSocket = null;
         boolean escuchando = true;
         final int PUERTO = 9090;
         ServerThread serverTh;
+        
+        Syn_online syn_online = new Syn_online();
         
         
         try {
@@ -41,9 +43,8 @@ public class Server {
             System.out.println("Esperando una conexión...");
             
             //Inicia el socket, ahora esta esperando una conexión por parte del cliente
-            serverTh = new ServerThread(serverSocket.accept());
-            serverTh.start();             
-            
+            serverTh = new ServerThread(serverSocket.accept(), syn_online);
+            serverTh.start(); 
             
         }
         serverSocket.close();
