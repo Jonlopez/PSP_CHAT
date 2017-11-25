@@ -6,7 +6,7 @@
 package chaton;
 
 import chaton.model.Syn_online;
-import chaton.view.VistaPrincipal;
+import chaton.view.VistaServer;
 
 /**
  *
@@ -29,7 +29,7 @@ public class Chaton {
     
     public static void lanzarVista(){
         syn_online = new Syn_online();
-        VistaPrincipal vP = new VistaPrincipal(syn_online);        
+        VistaServer vP = new VistaServer(syn_online);        
         vP.setVisible(true);
     }
     
