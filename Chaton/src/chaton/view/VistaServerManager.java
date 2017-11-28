@@ -5,6 +5,9 @@
  */
 package chaton.view;
 
+import chaton.model.Server;
+import chaton.model.ServerThread;
+
 /**
  *
  * @author Jon
@@ -14,8 +17,21 @@ public class VistaServerManager extends javax.swing.JFrame {
     /**
      * Creates new form VistaServerManager
      */
+    
+    VistaServer vS;
+    ServerThread serverTh;
+    Server server;
+    
     public VistaServerManager() {
         initComponents();
+    }
+    
+     public VistaServerManager(VistaServer vS, ServerThread serverTh) {
+        initComponents();
+        this.setLocationRelativeTo(this);
+        this.vS = vS;
+        this.serverTh = serverTh;
+        this.server = serverTh.getServer();
     }
 
     /**
@@ -45,6 +61,11 @@ public class VistaServerManager extends javax.swing.JFrame {
         jButton1.setText("Reiniciar");
 
         jButton2.setText("Atrás");
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -77,6 +98,13 @@ public class VistaServerManager extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+        // TODO add your handling code here:
+        vS.setVisible(true);
+        //cerrarConexionServidor();
+        this.dispose();        
+    }//GEN-LAST:event_jButton2MouseClicked
 
     /**
      * @param args the command line arguments

@@ -18,12 +18,12 @@ import javax.swing.JOptionPane;
  *
  * @author 9fdam03
  */
-public class ServerThread extends Thread {
+public class ServerClientThread extends Thread {
     Socket socket = null;
     String nickname;
     Syn_online syn_online;
     
-    public ServerThread(Socket socket, Syn_online syn_online) throws IOException {
+    public ServerClientThread(Socket socket, Syn_online syn_online) throws IOException {
         this.syn_online = syn_online;
         
         this.socket = socket;     
@@ -74,8 +74,9 @@ public class ServerThread extends Thread {
                 if(socket != null)
                     socket.close();
             } catch (IOException ex) {
-                Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ServerClientThread.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }
+    }    
+    
 }

@@ -17,23 +17,33 @@ import java.util.logging.Logger;
  * @author 9fdam03
  */
 public class Server {
+    
+    private Syn_online syn_online;
+    int puerto;
+
+    public Server(Syn_online syn_online, int puerto) throws IOException, InterruptedException {
+          this.syn_online = syn_online;
+          this.puerto = puerto;
+          arrancarServidor();
+    }
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public void arrancarServidor() throws IOException, InterruptedException {
         ServerSocket serverSocket = null;
         boolean escuchando = true;
-        final int PUERTO = 9090;
-        ServerThread serverTh;
         
-        Syn_online syn_online = new Syn_online();
+        ServerClientThread clientServerTh;
         
+        //Syn_online syn_online = new Syn_online();
+        
+        System.out.println("El servidor va a escuchar por el puerto -> " + puerto);
         
         try {
-            serverSocket = new ServerSocket(PUERTO);// crea socket servidor que escuchara en puerto 5500
+            serverSocket = new ServerSocket(puerto);// crea socket servidor que escuchara en puerto 5500
         } catch (IOException e) {
-            System.err.println("No puedo escuchar por el puerto: 9090.");
+            System.err.println("No puedo escuchar por el puerto: " + puerto);
             System.exit(-1);
         }
         //Creamos un bucle infinito para que se vayan creando nuevos sockets
@@ -43,8 +53,8 @@ public class Server {
             System.out.println("Esperando una conexión...");
             
             //Inicia el socket, ahora esta esperando una conexión por parte del cliente
-            serverTh = new ServerThread(serverSocket.accept(), syn_online);
-            serverTh.start(); 
+            clientServerTh = new ServerClientThread(serverSocket.accept(), this.syn_online);
+            clientServerTh.start(); 
             
         }
         serverSocket.close();

@@ -17,39 +17,52 @@ import javax.swing.JOptionPane;
  * @author 9fdam03
  */
 public class Client {
-    
+        
     //podemos usar el nombre del host o una InetAddress
-    final static String HOST = "localhost";
-    final static int PUERTO = 9090;
+    String host = "localhost";
+    int puerto = 9090;
+    
+    Socket sc = null;
+    BufferedReader br = null;
+    PrintWriter pw = null;
+
+    String nickname = "fulano";
+    String cadena = "";
+    
+    public Client(String nickname, String host, int puerto) throws IOException {
+        this.nickname = nickname;
+        this.host = host;
+        this.puerto = puerto;
+        arrancarCliente();
+    }      
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws IOException {
-        Socket sc = null;
-        BufferedReader br = null;
-        PrintWriter pw = null;
+    public void arrancarCliente() throws IOException {
+      
         //Cliente
         try 
         {
-            sc = new Socket(HOST, PUERTO); //conectar a un servidor en localhost con puerto 5500
+            sc = new Socket(host, puerto);
             //creamos el flujo de datos por el que se enviara un mensaje
             br= new BufferedReader(new InputStreamReader(System.in));
             pw =new PrintWriter(sc.getOutputStream(), true);
             
-            String nickname = (String) JOptionPane.showInputDialog("Escribe tu nickname para esta sesión: ");
-            pw.println(nickname);
-            System.out.print(nickname + " escribe tu mensaje: ");
+            pw.println(this.nickname);       
+            System.out.print(nickname + " escribe tu mensaje: ");            
             
             String cadenaEnvio = br.readLine();
            
             while(!cadenaEnvio.equalsIgnoreCase("fin"))
-            {
+            {  
                 pw.println(cadenaEnvio);
-                System.out.print( nickname +" escribe tu mensaje: ");
+                System.out.print( nickname +" escribe tu mensaje: " );
                 cadenaEnvio = br.readLine();
             }
+         
             pw.println(cadenaEnvio);
+                   
             
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -62,6 +75,14 @@ public class Client {
             if(sc != null)
                 sc.close();
         }
+    }
+    
+    public void solicitarMensaje(String sms){
+        
+    }
+    
+    public void enviarMensaje(String sms) throws IOException{        
+        this.cadena = sms;
     }
     
 }
